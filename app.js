@@ -38,7 +38,6 @@ const rpsTearDefaultAssignSteps = [];
    CHECKLISTS DATA
 ============================ */
 const checklists = {
-const checklists = {
   "antenna-deploy": { he:"פריסת אנטנה", defaultAssignSteps: antennaDefaultAssignSteps, steps: [] },
   "antenna-tear":   { he:"קיפול אנטנה", defaultAssignSteps: antennaTeardownDefaultAssignSteps, steps: [] },
   "rcs-deploy":     { he:"פריסת קרון", defaultAssignSteps: rcsDeployDefaultAssignSteps, steps: [] },
