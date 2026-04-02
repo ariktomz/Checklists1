@@ -25,14 +25,14 @@ const headerGradients = {
 /* ============================
    DEFAULT ASSIGNMENT ARRAYS
 ============================ */
-const antennaDefaultAssignSteps = [...];     // ← כל המערכים שלך
-const antennaTeardownDefaultAssignSteps = [...];
-const rcsDeployDefaultAssignSteps = [...];
-const rcsTearDefaultAssignSteps = [...];
-const coolingDeployDefaultAssignSteps = [...];
-const coolingTearDefaultAssignSteps = [...];
-const rpsDeployDefaultAssignSteps = [...];
-const rpsTearDefaultAssignSteps = [...];
+const antennaDefaultAssignSteps = [];     // ← כל המערכים שלך
+const antennaTeardownDefaultAssignSteps = [];
+const rcsDeployDefaultAssignSteps = [];
+const rcsTearDefaultAssignSteps = [];
+const coolingDeployDefaultAssignSteps = [];
+const coolingTearDefaultAssignSteps = [];
+const rpsDeployDefaultAssignSteps = [];
+const rpsTearDefaultAssignSteps = [];
 
 /* ============================
    CHECKLISTS DATA
