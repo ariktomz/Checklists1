@@ -1,79 +1,1713 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>רשימת תיוג - מערכות</title>
 
-  <meta name="theme-color" content="#0a1628">
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icons/icon-192.png">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <title>רשימות תיוג לפריסה וקיפול</title>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #0a1628;
+  color: #e8edf5;
+  min-height: 100vh;
+  direction: rtl;
+  text-align: right;
+}
 
-  <link rel="stylesheet" href="styles.css">
+/* TOP BAR */
+.header {
+  background: #0d1f3c;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  border-bottom: 2px solid #1e3a5f;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* SCREENS */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* HOME SCREEN */
+.home-screen { padding: 20px; }
+
+.btn-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.tile {
+  border-radius: 16px;
+  padding: 20px 14px;
+  cursor: pointer;
+  text-align: center;
+  color: #fff;
+  font-weight: 600;
+  transition: transform 0.15s;
+}
+.tile:active { transform: scale(0.96); }
+.tile .icon {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  height: 70px;
+  font-size: 52px;
+}
+
+/* Tile colors */
+.tile-blue    { background: linear-gradient(135deg,#3a6bd1,#1e3f8a); }
+.tile-orange  { background: linear-gradient(135deg,#d17a3a,#8a4f1e); }
+.tile-green   { background: linear-gradient(135deg,#3ad16b,#1e8a3f); }
+.tile-brown   { background: linear-gradient(135deg,#8a6b3a,#5a3f1e); }
+.tile-purple  { background: linear-gradient(135deg,#7a3ad1,#4f1e8a); }
+.tile-red     { background: linear-gradient(135deg,#d13a3a,#8a1e1e); }
+
+/* 3D RCS shelter icon */
+.shelter {
+  width: 60px;
+  height: 36px;
+  background: #3a6b3a;
+  border: 3px solid #2e552e;
+  border-radius: 6px;
+  position: relative;
+}
+.shelter:after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 30px;
+  background: #2e552e;
+  left: -9px;
+  top: 3px;
+  transform: skewY(12deg);
+  border-radius: 3px;
+}
+
+/* Footer on home screen */
+.footer-bar {
+  margin-top: 26px;
+  background: #ffffff;
+  padding: 14px 0;
+  border-radius: 12px 12px 0 0;
+  text-align: center;
+}
+.footer-text {
+  color: #1a4fa3;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* CHECKLIST HEADER */
+.checklist-header {
+  background: #0d1f3c;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #1e3a5f;
+  flex-direction: row-reverse;
+}
+.back-btn {
+  width: 40px;
+  height: 40px;
+  background: #f5d742;
+  border-radius: 10px;
+  border: 3px solid #d4b400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  cursor: pointer;
+  color: #2b2b2b;
+}
+.reset-btn {
+  width: 40px;
+  height: 40px;
+  background: #f0a000;
+  border-radius: 10px;
+  border: 3px solid #d48800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  color: #2b2b2b;
+}
+.clear-crew-btn {
+  width: 40px;
+  height: 40px;
+  background: #4aa3df;
+  border-radius: 10px;
+  border: 3px solid #2b7cad;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  cursor: pointer;
+  color: #0a1628;
+}
+.clear-crew-btn:active {
+  transform: scale(0.95);
+}
+.auto-assign-btn {
+  width: 40px;
+  height: 40px;
+  background: #7bd35a;
+  border-radius: 10px;
+  border: 3px solid #4c9b34;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  cursor: pointer;
+  color: #0a1628;
+}
+.auto-assign-btn:active {
+  transform: scale(0.95);
+}
+.checklist-title-wrap { flex: 1; }
+.checklist-title { font-size: 18px; font-weight: 700; }
+.checklist-sub { font-size: 12px; color: #e8edf5; }
+
+/* Progress */
+.progress-wrap {
+  background: #0d1f3c;
+  padding: 10px 20px 14px;
+  border-bottom: 1px solid #1e3a5f;
+}
+.progress-bar-bg {
+  background: #1e3a5f;
+  border-radius: 10px;
+  height: 8px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg,#2e7d52,#4caf82);
+  border-radius: 10px;
+  transition: width 0.3s;
+}
+.progress-text {
+  font-size: 11px;
+  color: #7eb8f7;
+  margin-top: 6px;
+  text-align: right;
+}
+
+/* CREW */
+.crew-wrap {
+  background: #0f2240;
+  border-bottom: 1px solid #1e3a5f;
+}
+.crew-header {
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 14px;
+  color: #7eb8f7;
+  direction: rtl;
+  text-align: right;
+  flex-direction: row-reverse;
+}
+.crew-body {
+  padding: 10px 20px 14px;
+  display: none;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.crew-body.show { display: flex; }
+.crew-row label { margin-left: 4px; }
+.crew-row input {
+  background: #0a1628;
+  border: 1px solid #2a4d7f;
+  border-radius: 6px;
+  padding: 4px 6px;
+  color: #e8edf5;
+}
+
+/* Captain button */
+.captain-container {
+  margin-right: auto;
+}
+.captain-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid #2a4d7f;
+  background: #1e3a5f;
+  color: #e8edf5;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+}
+.captain-btn.captain-active {
+  background: #f5d742;
+  color: #2b2b2b;
+  border-color: #f5d742;
+  box-shadow: 0 0 6px rgba(245,215,66,0.7);
+}
+
+/* Steps */
+.steps-list {
+  padding: 14px 16px 100px;
+}
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #0f2240;
+  border: 1px solid #1e3a5f;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+.step-item.checked {
+  background: #0a2918;
+  border-color: #1a5c3a;
+  opacity: 0.75;
+}
+
+/* Number badge */
+.step-number {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0a1628;
+  background: #bcd0e8;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+/* Checkbox */
+.step-checkbox {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 2px solid #2a4d7f;
+  background: #0a1628;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* Text */
+.step-text {
+  font-size: 16px;
+  line-height: 1.5;
+  flex: 1;
+  white-space: normal;
+}
+
+/* Assigned-to */
+.assign-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.assign-input {
+  width: 40px;
+  background: #0a1628;
+  border: 1px solid #2a4d7f;
+  border-radius: 6px;
+  padding: 2px 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #e8edf5;
+  text-align: center;
+}
+
+.assigned-highlight {
+  box-shadow: 0 0 0 2px #4caf82;
+}
+
+/* Complete badge */
+.complete-badge {
+  display: none;
+  background: linear-gradient(135deg,#2e7d52,#1a5c3a);
+  padding: 12px;
+  border-radius: 10px;
+  text-align: center;
+  color: #fff;
+  font-weight: 600;
+}
+.complete-badge.show { display: block; }
+
+/* Captain-only banner */
+.captain-banner {
+  background: #f5d742;
+  color: #2b2b2b;
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+/* Separator line */
+.separator-line {
+  border-top: 2px solid #d1b300;
+  margin: 14px 0;
+  opacity: 0.8;
+}
+
+/* Yellow label inside steps */
+.yl {
+  background: #f5d742;
+  color: #2b2b2b;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+</style>
 </head>
-
 <body>
 
-  <!-- מסך הבית -->
-  <div id="screen-home" class="screen active">
-    <h1 class="home-title">רשימות תיוג</h1>
+<div class="header"></div>
 
-    <div class="home-list">
-      <button class="home-btn" onclick="openChecklist('antenna-deploy','blue')">פריסת אנטנה</button>
-      <button class="home-btn" onclick="openChecklist('antenna-tear','orange')">קיפול אנטנה</button>
-      <button class="home-btn" onclick="openChecklist('rcs-deploy','green')">פריסת קרון</button>
-      <button class="home-btn" onclick="openChecklist('rcs-tear','brown')">קיפול קרון</button>
-      <button class="home-btn" onclick="openChecklist('rps-deploy','purple')">פריסת מערכת כוח</button>
-      <button class="home-btn" onclick="openChecklist('rps-tear','red')">קיפול מערכת כוח</button>
-      <button class="home-btn" onclick="openChecklist('cooling-deploy','cool1')">פריסת מערכת קירור</button>
-      <button class="home-btn" onclick="openChecklist('cooling-tear','cool2')">קיפול מערכת קירור</button>
+<!-- HOME SCREEN -->
+<div id="screen-home" class="screen active home-screen">
+
+  <div class="btn-grid">
+
+    <div class="tile tile-blue" onclick="openChecklist('antenna-deploy','blue')">
+      <div class="icon">📡</div>
+      פריסת אנטנה
     </div>
 
-    <button id="captain-btn" class="captain-btn">מצב קפטן</button>
-    <button class="reset-btn" onclick="resetAll()">איפוס מלא</button>
+    <div class="tile tile-orange" onclick="openChecklist('antenna-tear','orange')">
+      <div class="icon">📡</div>
+      קיפול אנטנה
+    </div>
+
+    <div class="tile tile-green" onclick="openChecklist('rcs-deploy','green')">
+      <div class="icon"><div class="shelter"></div></div>
+      פריסת קרון
+    </div>
+
+    <div class="tile tile-brown" onclick="openChecklist('rcs-tear','brown')">
+      <div class="icon"><div class="shelter"></div></div>
+      קיפול קרון
+    </div>
+
+    <div class="tile tile-purple" onclick="openChecklist('rps-deploy','purple')">
+      <div class="icon">⚡</div>
+      פריסת מערכת כוח
+    </div>
+
+    <div class="tile tile-red" onclick="openChecklist('rps-tear','red')">
+      <div class="icon">⚡</div>
+      קיפול מערכת כוח
+    </div>
+
+    <div class="tile" style="background: linear-gradient(135deg,#3ac7d1,#1e7a8a);"
+         onclick="openChecklist('cooling-deploy','cool1')">
+      <div class="icon">❄️</div>
+      פריסת מערכת קירור
+    </div>
+
+    <div class="tile" style="background: linear-gradient(135deg,#6ad1ff,#2a8ab8);"
+         onclick="openChecklist('cooling-tear','cool2')">
+      <div class="icon">❄️</div>
+      קיפול מערכת קירור
+    </div>
+
   </div>
 
-  <!-- מסך צ'ק ליסט -->
-  <div id="screen-checklist" class="screen">
-    <div id="checklist-header">
-      <button class="back-btn" onclick="goHome()">← חזרה</button>
-      <h2 id="cl-title"></h2>
-      <div id="cl-sub"></div>
-    </div>
+  <div class="footer-bar">
+    <div class="footer-text">© ELTA and IAI ACADEMY</div>
+  </div>
 
-    <div id="progress-bar">
-      <div id="progress-fill"></div>
-      <span id="progress-text"></span>
-    </div>
+</div>
 
-    <div id="complete-badge">✔ הושלם</div>
-
-    <div id="crew-panel">
-      <div id="crew-toggle" onclick="toggleCrew()">
-        צוות <span id="crew-toggle-indicator">▼</span>
-      </div>
-      <div id="crew-body">
-        <div class="crew-row"><span>A</span><input data-crew="A"></div>
-        <div class="crew-row"><span>B</span><input data-crew="B"></div>
-        <div class="crew-row"><span>C</span><input data-crew="C"></div>
-        <div class="crew-row"><span>D</span><input data-crew="D"></div>
-        <div class="crew-row"><span>E</span><input data-crew="E"></div>
-        <div class="crew-row"><span>F</span><input data-crew="F"></div>
-        <div class="crew-row"><span>G</span><input data-crew="G"></div>
-        <div class="crew-row"><span>H</span><input data-crew="H"></div>
-      </div>
-    </div>
-
-    <div id="steps-list"></div>
-
-    <div id="assign-actions">
-      <button onclick="autoAssignCrew()">שיוך אוטומטי</button>
-      <button onclick="clearCrew()">ניקוי שיוכים</button>
+<!-- CHECKLIST SCREEN -->
+<div id="screen-checklist" class="screen checklist-screen">
+  <div class="checklist-header" id="checklist-header">
+    <div class="back-btn" onclick="goHome()">⬅️</div>
+    <div class="reset-btn" onclick="resetAll()">🔄</div>
+    <div class="clear-crew-btn" onclick="clearCrew()">🧹</div>
+    <div class="auto-assign-btn" onclick="autoAssignCrew()">👤</div>
+    <div class="checklist-title-wrap">
+      <div class="checklist-title" id="cl-title"></div>
+      <div class="checklist-sub" id="cl-sub"></div>
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <div class="progress-wrap">
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+    <div class="progress-text" id="progress-text"></div>
+  </div>
+
+  <div class="crew-wrap">
+    <div class="crew-header" onclick="toggleCrew()">
+      <span id="crew-toggle-indicator">▼</span>
+    </div>
+    <div class="crew-body" id="crew-body">
+      <div class="crew-row"><label>A:</label><input data-crew="A"></div>
+      <div class="crew-row"><label>B:</label><input data-crew="B"></div>
+      <div class="crew-row"><label>C:</label><input data-crew="C"></div>
+      <div class="crew-row"><label>D:</label><input data-crew="D"></div>
+      <div class="crew-row"><label>E:</label><input data-crew="E"></div>
+      <div class="crew-row"><label>F:</label><input data-crew="F"></div>
+      <div class="crew-row"><label>G:</label><input data-crew="G"></div>
+      <div class="crew-row"><label>H:</label><input data-crew="H"></div>
+
+      <div class="captain-container">
+        <button id="captain-btn" class="captain-btn">מפקד</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="steps-list" id="steps-list"></div>
+  <div class="complete-badge" id="complete-badge">המשימה הושלמה!</div>
+</div>
+
+<script>
+let currentChecklist = null;
+let checked = {};
+let assigned = {};
+let crew = {A:'',B:'',C:'',D:'',E:'',F:'',G:'',H:''};
+let captainMode = false;
+let currentColor = null;
+
+/* header colors */
+const headerGradients = {
+  blue:   'linear-gradient(135deg,#3a6bd1,#1e3f8a)',
+  orange: 'linear-gradient(135deg,#d17a3a,#8a4f1e)',
+  green:  'linear-gradient(135deg,#3ad16b,#1e8a3f)',
+  brown:  'linear-gradient(135deg,#8a6b3a,#5a3f1e)',
+  purple: 'linear-gradient(135deg,#7a3ad1,#4f1e8a)',
+  red:    'linear-gradient(135deg,#d13a3a,#8a1e1e)',
+  cool1:  'linear-gradient(135deg,#3ac7d1,#1e7a8a)',
+  cool2:  'linear-gradient(135deg,#6ad1ff,#2a8ab8)'
+};
+
+/* DEFAULT ASSIGN ARRAYS */
+const antennaDefaultAssignSteps = [
+  "AB","CD","AB","EF","EF","C","D","C","C","C",
+  "C","AB","C","B","EF","AD","AD","AD","B","E",
+  "E","E","E","F","F","F","C","C","C","C",
+  "C","AD","B","E","F","F"
+];
+
+const antennaTeardownDefaultAssignSteps = [
+  "A","B","A","A","A","CD","AE","E","F","F",
+  "F","F","B","B","A","AC","B","B","B","CD",
+  "AB","B","AC","AC","F","AB","F","CD","EF","AB",
+  "AB","F","F","F"
+];
+
+const rcsDeployDefaultAssignSteps = [
+  "AB","ABCD","EF","CD","AB","AB","E","E","E","F",
+  "F","F","F","AB","F","F","F","F","AB","CD",
+  "EF","AB","E","AB","C","D","BE","CD","F","F",
+  "ABE","A","C","A","C","B","B","B","B","B",
+  "B","B","B","B","B","B"
+];
+
+const rcsTearDefaultAssignSteps = [
+  "A","A","A","B","E","CD","EF","A","A","B",
+  "A","A","A","B","B","B","EF","B","EF","EF",
+  "B","B","C","CD","CD","EF","E","EF","EF","A",
+  "A","A","A"
+];
+
+const coolingDeployDefaultAssignSteps = [
+  "EF","EF","CD","EF","ABCD","ABCD","EF","ABCD","EF","ABCD",
+  "E","F","AB","CD","E","F","C","EF","EF","AB",
+  "AB","C","ABEF","E","E","E","E","E"
+];
+
+const coolingTearDefaultAssignSteps = [
+  "A","A","A","A","CD","B","CD","EF","CD","B",
+  "AF","AB","CD","EF","ABCD","EF","ABCD","ABCD","EF","ABCD"
+];
+
+const rpsDeployDefaultAssignSteps = [
+  "AB","AB","CD","EF","CDEF","CDEF","CDEF","AB","CDEF","AB",
+  "C","EF","E","E","E","E","E","E","E","E",
+  "E","E","F","ABC","DEF","E","AB","AB","CD"
+];
+
+const rpsTearDefaultAssignSteps = [
+  "A","BC","BC","BC","ABC","DEF","A","A","A","A",
+  "BC","D","EF","AD","ABCD","EF","ABCD","ABCD","ABCD","ABCD",
+  "EF","EF","ABCD","ABCD"
+];
+
+/* CHECKLISTS DATA */
+const checklists = {
+
+  'antenna-deploy': {
+    he:'פריסת אנטנה',
+    defaultAssignSteps: antennaDefaultAssignSteps,
+    steps: [
+
+      { type:"captain", text:"בצע תדריך בטיחות" },
+      { type:"captain", text:"הגדר מיקום פריסה בהתחשב במיקום RPS ו‑LRCU" },
+
+      { type:"step", text:"כוון את המשאית אל מיקום הפריסה" }, // 1
+
+      { type:"separator" },
+
+      { type:"step", text:"שחרר את נעילת הפדסטאל מהמשאית" }, // 2
+      { type:"step", text:"שחרר את נעילת עמודי התמיכה" }, // 3
+      { type:"step", text:"הבא משטחי פיזור לחץ מפלטפורמת מערכת הקירור ומקם תחת כל רגל" }, // 4
+      { type:"step", text:"הסר פלטות קרקע מהפדסטאל וחבר לכל רגל" }, // 5
+      { type:"step", text:"הוצא את שלט הפילוס" }, // 6
+      { type:"step", text:"הרם את מפסק קופסת המצברים" }, // 7
+
+      { type:"separator" },
+
+      { type:"step", text:"הפעל את שלט הפילוס" }, // 8
+
+      { type:"separator" },
+
+      { type:"step", text:"שלט פילוס: ודא שכל הרגליים בגבול עליון. אם לא – תקן בהתאם" }, // 9
+
+      { type:"captain", text:"ודא שכל נועלי הפדסטאל פתוחים" },
+
+      { type:"separator" },
+
+      {
+        type:"step",
+        text:`שלט פילוס: <span class="yl">Enable</span> + Ground Start. בזמן ירידת הרגליים התאם את מיקום משטחי פיזור הלחץ`
+      }, // 10
+
+      { type:"separator" },
+
+      { type:"step", text:"שלט פילוס: Height Up. הרם את הפדסטאל לגובה המאפשר להוציא את המשאית" }, // 11
+
+      { type:"separator" },
+
+      { type:"captain", text:"תדרך את מכווני המשאית, הקפד על מהירות של עד 3 קמ\"ש" },
+
+      { type:"step", text:"כוון לאט את המשאית ליציאה" }, // 12
+
+      { type:"separator" },
+
+      { type:"step", text:"שלט פילוס: Height Down. הורד את הפדסטאל לגובה עבודה" }, // 13
+
+      { type:"separator" },
+
+      { type:"captain", text:"ודא ש‑RPS פועלת ו‑LRCU פרוסה" },
+
+      { type:"step", text:"RPS: ודא מתגי AC ו‑DC במצב כבוי" }, // 14
+
+      { type:"separator" },
+
+      { type:"step", text:"חבר שני צינורות מ‑LRCU לפדסטאל. אבטח כל חיבור בעזרת פין פציל" }, // 15
+      { type:"step", text:"חבר כבל הארקה משותפת" }, // 16
+      { type:"step", text:"חבר שלושה כבלי מתח אל PDB1" }, // 17
+      { type:"step", text:"הכנס מוט הארקה לקרקע וחבר כבל הארקה בין המוט לאנטנה" }, // 18
+
+      { type:"separator" },
+
+      { type:"step", text:"RPS: העבר קודם את מתג AC למצב ON, אח\"כ מתג DC למצב ON" }, // 19
+
+      { type:"separator" },
+
+      { type:"step", text:"LRCU: העבר מפסק ראשי למצב אנכי" }, // 20
+
+      { type:"separator" },
+
+      { type:"step", text:"LRCU: העבר מפסק 24V למצב ON" }, // 21
+
+      { type:"separator" },
+
+      { type:"step", text:"LRCU: העבר מפסק LOCAL/REMOTE למצב LOCAL" }, // 22
+
+      { type:"separator" },
+
+      { type:"step", text:"LRCU: לחץ על כפתור START" }, // 23
+
+      { type:"captain", text:"ודא ש‑LRCU פועלת" },
+
+      { type:"step", text:"קופסת בקרה: העבר מפסק ANT LOCAL/ANT REMOTE למצב ANT LOCAL" }, // 24
+      { type:"step", text:"קופסת בקרה: העבר מפסק PED למצב PED ENABLE" }, // 25
+
+      { type:"separator" },
+
+      {
+        type:"step",
+        text:"קופסת בקרה: הרם והחזק את מפסק ANTENNA UP. שחרר מפסק עם תחילת תנועה של האנטנה, המתן לסיום תנועת המגבהים"
+      }, // 26
+
+      { type:"separator" },
+
+      {
+        type:"step",
+        text:`שלט פילוס: <span class="yl">Enable</span> + Level Start. שחרר מפסקים עם תחילת תנועה`
+      }, // 27
+
+      { type:"separator" },
+
+      { type:"step", text:"Loadcell: בדוק איזון משקל, תקן אם נדרש" }, // 28
+
+      { type:"separator" },
+
+      { type:"step", text:"שלט פילוס: בדוק שדות ROLL ו‑PITCH. אם אינם ירוקים, בצע פילוס אוטומטי שוב" }, // 29
+      { type:"step", text:"כבה שלט פילוס והחזר למקום" }, // 30
+      { type:"step", text:"הוצא פין אפס והכנס אל המחזיק" }, // 31
+      { type:"step", text:"שחרר את הסולם מהפדסטאל ופרוס אותו" }, // 32
+      { type:"step", text:"RPS: העבר מפסקי AC ו‑DC למצב PRCU" }, // 33
+      { type:"step", text:"LRCU: העבר מפסק LOCAL/REMOTE למצב REMOTE" }, // 34
+      { type:"step", text:"קופסת בקרה: העבר את מפסק TX למצב ENABLE" }, // 35
+
+      { type:"separator" },
+
+      { type:"step", text:"קופסת בקרה: העבר מפסק ANT LOCAL/ANT REMOTE למצב ANT REMOTE" } // 36
+    ]
+  },
+
+  'antenna-tear': {
+    he: 'קיפול אנטנה',
+    defaultAssignSteps: antennaTeardownDefaultAssignSteps,
+    steps: [
+
+      { type:"captain", text:"ודא ש‑CU וספקים כובו ב‑OWS" },
+      { type:"captain", text:"תדריך בטיחות ומוכנות לקיפול" },
+
+      { type:"step", text:"קופסת בקרה: העבר מפסק בורר מקום שליטה ל‑ANT LOCAL" }, // 1
+
+      { type:"separator" },
+
+      { type:"step", text:"RPS: העבר מפסק AC למצב ON ואח\"כ מפסק DC למצב ON" }, // 2
+      { type:"step", text:"קופסת בקרה: העבר את מפסק שליטה בשידור למצב DISABLE TX" }, // 3
+      { type:"step", text:"קופסת בקרה: ודא שמפסק שליטה בפדסטאל במצב PEDESTAL ENABLE" }, // 4
+      { type:"step", text:"קופסת בקרה: ודא שכל החיוויים תקינים" }, // 5
+      { type:"step", text:"קפל את הסולם, ונעל על גבי הפדסטאל" }, // 6
+
+      { type:"separator" },
+
+      { type:"step", text:"ודא שהמערכת במצב סגירה. אם לא, תקן בעזרת מפסקי CW/CCW" }, // 7
+
+      { type:"separator" },
+
+      { type:"step", text:"הכנס פין אפס" }, // 8
+      { type:"step", text:"הרם את מפסק קופסת המצברים" }, // 9
+      { type:"step", text:"הוצא את שלט הפילוס" }, // 10
+
+      { type:"separator" },
+
+      { type:"step", text:"הפעל את שלט הפילוס" }, // 11
+      { type:"step", text:"Loadcell: ודא שהפדסטאל מפולס, תקן אם נדרש" }, // 12
+
+      { type:"separator" },
+
+      { type:"step", text:"LRCU: העבר מפסק LOCAL/REMOTE למצב LOCAL" }, // 13
+
+      { type:"separator" },
+
+      { type:"step", text:"LRCU: לחץ על כפתור START" }, // 14
+
+      { type:"separator" },
+
+      { type:"step", text:"קופסת בקרה: הרם והחזק את מפסק ANTENNA DOWN. שחרר מפסק עם תחילת תנועה של האנטנה" }, // 15
+
+      { type:"captain", text:"הצב צופה לעמוד התמיכה המרוחק, תדרך את שני המפעילים לשמור על קשר עין ולשחרר את המפסק בעת מגע של האנטנה עם עמודי התמיכה" },
+
+      { type:"separator" },
+
+      { type:"step", text:"קופסת בקרה: הרם והחזק את מפסק ANTENNA DOWN. המשך להחזיק עד ירידה מלאה של האנטנה" }, // 16
+
+      { type:"separator" },
+
+      { type:"step", text:"LRCU: לחץ על כפתור STOP" }, // 17
+
+      { type:"separator" },
+
+      { type:"step", text:"LRCU: העבר מפסק 24V למצב OFF" }, // 18
+
+      { type:"separator" },
+
+      { type:"step", text:"RPS: העבר את מתג DC למצב OFF ואח\"כ את מתג AC למצב OFF" }, // 19
+
+      { type:"separator" },
+
+      { type:"step", text:"נתק שני צינורות קירור מהפדסטאל" }, // 20
+      { type:"step", text:"נתק כבל הארקה משותפת" }, // 21
+      { type:"step", text:"נתק כבל הארקה ממוט ההארקה ומהאנטנה, שלוף את המוט והחזר לאחסון ב‑RPS" }, // 22
+      { type:"step", text:"נתק כבל מתח מערכת קירור מ‑PDB1" }, // 23
+      { type:"step", text:"נתק שלושה כבלי מתח מ‑PDB1" }, // 24
+
+      { type:"separator" },
+
+      { type:"step", text:"שלט פילוס: Height Up. הרם את הפדסטאל לגובה המאפשר להכניס את המשאית" }, // 25
+
+      { type:"separator" },
+
+      { type:"captain", text:"תדרך את שני המכוונים, הדגש את נושא התקשורת עם הנהג. המהירות לא תעלה על 3 קמ\"ש" },
+
+      { type:"step", text:"כוון את המשאית לכניסה מתחת לפדסטאל" }, // 26
+
+      { type:"separator" },
+
+      { type:"step", text:"שלט פילוס: Height Down. הורד את הפדסטאל אל המשאית. המשך להחזיק עד שהרגליים עולות" }, // 27
+
+      { type:"separator" },
+
+      { type:"step", text:"נעל את הפדסטאל למשאית" }, // 28
+
+      { type:"captain", text:"ודא נעילה תקינה בכל ארבע הפינות" },
+
+      { type:"step", text:"נעל את נעילת עמודי התמיכה" }, // 29
+      { type:"step", text:"הסר פלטות קרקע מכל רגל ונעל במגש המתאים על גבי הפדסטאל" }, // 30
+      { type:"step", text:"אסוף את משטחי פיזור הלחץ ונעל על גבי פלטפורמת מערכת הקירור" }, // 31
+      { type:"step", text:"שלט הפילוס: ודא שכל הרגליים בגבול עליון. אם לא – תקן בהתאם" }, // 32
+
+      { type:"separator" },
+
+      { type:"step", text:"כבה שלט פילוס והחזר למקום" }, // 33
+
+      { type:"separator" },
+
+      { type:"step", text:"הורד את מפסק קופסת המצברים" } // 34
+    ]
+  },
+
+  // RCS = קרון
+  'rcs-deploy': {
+    he: 'פריסת קרון',
+    defaultAssignSteps: rcsDeployDefaultAssignSteps,
+    steps: [
+
+      { type:"captain", text:"בצע תדריך בטיחות" },
+      { type:"captain", text:"הגדר מיקום פריסה בהתחשב במיקום RPS" },
+
+      { type:"step", text:"כוון את המשאית אל מיקום הפריסה" }, // 1
+
+      { type:"separator" },
+
+      { type:"step", text:"שחרר את נעילת הפלטפורמה מהמשאית" }, // 2
+
+      { type:"captain", text:"ודא שכל נועלי הפלטפורמה פתוחים" },
+
+      { type:"step", text:"הבא משטחי פיזור לחץ מפלטפורמת מערכת הקירור ומקם תחת כל רגל" }, // 3
+      { type:"step", text:"הבא מוט וכבל הארקה מ‑RPS וחבר הארקה לקרון" }, // 4
+      { type:"step", text:"משוך בכבל הנעילה של כל רגל, הצב בניצב למערכת וודא נעילה" }, // 5
+      { type:"step", text:"הסר פלטת קרקע מצד כל רגל וחבר אל הרגל" }, // 6
+
+      { type:"separator" },
+
+      { type:"step", text:"היכנס אל הקרון והוצא את שלט הפילוס מארון האחסנה" }, // 7
+      { type:"step", text:"במסד כוח הרם את מפסקי BATTERY SET 1 + 2" }, // 8
+      { type:"step", text:"על לוח החשמל הראשי העבר את מפסק CB32 למצב ON" }, // 9
+
+      { type:"separator" },
+
+      { type:"step", text:"חבר את שלט הפילוס לתיבת בקרת הפילוס" }, // 10
+
+      { type:"separator" },
+
+      { type:"step", text:"הדלק את תיבת בקרת הפילוס" }, // 11
+
+      { type:"separator" },
+
+      { type:"step", text:"סובב את כפתור ההדלקה של שלט הפילוס CCW והעבר את בורר המצבים למצב 0°" }, // 12
+
+      { type:"separator" },
+
+      { type:"step", text:"לחץ על כפתור הרמה עד שהרגליים נוגעות בקרקע והקרון עולה, עד לגובה המאפשר הוצאת המשאית" }, // 13
+
+      { type:"separator" },
+
+      { type:"captain", text:"תדרך את מכווני המשאית, הקפד על מהירות של עד 3 קמ\"ש" },
+
+      { type:"step", text:"כוון את המשאית ליציאה" }, // 14
+      { type:"step", text:"לחץ על כפתור הורדה עד שהקרון יורד עד הסוף. עם עצירת תנועה עזוב – מתבצע פילוס אוטומטי" }, // 15
+
+      { type:"separator" },
+
+      { type:"step", text:"כבה את תיבת בקרת הפילוס" }, // 16
+      { type:"step", text:"נתק את שלט הפילוס והחזר לארון האחסון" }, // 17
+      { type:"step", text:"שחרר את בורג הפרפרית והוצא את המצלמה" }, // 18
+      { type:"step", text:"חתוך אזיקון מכבל בקרת מערכת כוח ופרוס אל מערכת הכוח" }, // 19
+      { type:"step", text:"חתוך אזיקון מכבל נתונים אופטי של מערכת כוח ופרוס אל מערכת הכוח" }, // 20
+      { type:"step", text:"חתוך אזיקון מכבל תקשורת מכ\"ם אופטי ופרוס וחבר אל האנטנה" }, // 21
+      { type:"step", text:"פתח את ברזנט תוף כבל המתח, חתוך אזיקון ושחרר את הכבל" }, // 22
+
+      { type:"separator" },
+
+      { type:"step", text:"לחץ על כפתור הפעלת מתח ממצברים" }, // 23
+      { type:"step", text:"חבר כבל בקרת מערכת כוח אל J5P ו‑J14" }, // 24
+      { type:"step", text:"שחרר כיסאות" }, // 25
+      { type:"step", text:"פרוס מקלדות ועכברים" }, // 26
+      { type:"step", text:"חבר כבל נתונים אופטי של מערכת כוח אל J6P ו‑J13" }, // 27
+      { type:"step", text:"חבר כבל תקשורת מכ\"ם אופטי אל J51 ו‑J12" }, // 28
+      { type:"step", text:"חבר את המצלמה אל הזרוע הטלסקופית וחבר את הכבל החשמלי" }, // 29
+      { type:"step", text:"שחרר והרם את הזרוע הטלסקופית" }, // 30
+      { type:"step", text:"על תיבת בקרת התוף לחץ FORWARD ופרוס את כבל המתח לכיוון מערכת הכוח" }, // 31
+
+      { type:"separator" },
+
+      { type:"step", text:"חבר את כבל המתח אל J2 בתא חיבורי האספקות" }, // 32
+
+      { type:"separator" },
+
+      { type:"step", text:"ודא שנורית 2H11 דולקת. אם לא – לחץ על 1SC11" }, // 33
+
+      { type:"separator" },
+
+      { type:"step", text:"חבר את כבל המתח אל J11P במערכת הכוח" }, // 34
+
+      { type:"separator" },
+
+      { type:"step", text:"לחץ על SC11 לחיבור מתח לקרון" }, // 35
+
+      { type:"separator" },
+
+      { type:"step", text:"על לוח המתחים העבר את SW1 למצב גנראטור" }, // 36
+
+      { type:"separator" },
+
+      { type:"step", text:"על לוח החשמל הראשי העבר את בורר ההזנות למצב 1 – מתח מגובה" }, // 37
+
+      { type:"separator" },
+
+      { type:"step", text:"על לוח החשמל הראשי הרם את מפסק CB1" }, // 38
+
+      { type:"separator" },
+
+      { type:"step", text:"על לוח החשמל הראשי הרם את מפסק CB5" }, // 39
+
+      { type:"separator" },
+
+      { type:"step", text:"על לוח החשמל הראשי הרם את מפסק CB27" }, // 40
+
+      { type:"separator" },
+
+      { type:"step", text:"על לוח החשמל הראשי לחץ על S4" }, // 41
+
+      { type:"separator" },
+
+      { type:"step", text:"הרם את כל המפסקים בלוח החשמל הראשי" }, // 42
+
+      { type:"separator" },
+
+      { type:"step", text:"הרם את כל המפסקים במסד הכוח" }, // 43
+
+      { type:"separator" },
+
+      { type:"step", text:"הרם את כל המפסקים במסד המחשבים" }, // 44
+
+      { type:"separator" },
+
+      { type:"step", text:"על פאנל PRCU העבר את מתג AC למצב ON" }, // 45
+
+      { type:"separator" },
+
+      { type:"step", text:"על פאנל PRCU העבר את מתג DC למצב ON" } // 46
+    ]
+  },
+
+  'rcs-tear': {
+    he: 'קיפול קרון',
+    defaultAssignSteps: rcsTearDefaultAssignSteps,
+    steps: [
+
+      { type:"captain", text:"בצע תדריך בטיחות" },
+
+      { type:"step", text:"על פאנל PRCU, העבר את מתג DC למצב OFF" }, // 1
+
+      { type:"separator" },
+
+      { type:"step", text:"על פאנל PRCU, העבר את מתג AC למצב OFF" }, // 2
+
+      { type:"captain", text:"ודא ש‑OWS לא נדרש לאנטנה" },
+
+      { type:"step", text:"לחץ על צלמית כיבוי המחשבים והמתן לכיבוי מלא" }, // 3
+      { type:"step", text:"הורד זרוע טלסקופית ונתק מצלמה וכבל, נעל את הזרוע" }, // 4
+      { type:"step", text:"נתק כבל אופטי של אנטנה" }, // 5
+      { type:"step", text:"נתק כבל בקרת כוח ממערכת כוח וקרון וגלול על התוף" }, // 6
+      { type:"step", text:"נתק כבל נתונים אופטי כוח ממערכת כוח וקרון וגלול על התוף" }, // 7
+      { type:"step", text:"נעל כיסאות" }, // 8
+      { type:"step", text:"אחסן מקלדות ועכברים" }, // 9
+
+      { type:"separator" },
+
+      { type:"step", text:"הכנס את המצלמה לקרון, נעל במקום בין ארון האחסון לדופן הקרון" }, // 10
+      { type:"step", text:"הורד את כל המפסקים במסד המחשבים" }, // 11
+
+      { type:"separator" },
+
+      { type:"step", text:"הורד את כל המפסקים במסד הכוח למעט BATTERY SET 1 + 2" }, // 12
+      { type:"step", text:"הורד את כל המפסקים על לוח החשמל הראשי למעט מפסק CB32" }, // 13
+
+      { type:"separator" },
+
+      { type:"step", text:"הוצא את שלט הפילוס מארון האחסנה וחבר אל תיבת בקרת הפילוס" }, // 14
+
+      { type:"separator" },
+
+      { type:"step", text:"הדלק את תיבת בקרת הפילוס" }, // 15
+
+      { type:"separator" },
+
+      { type:"step", text:"סובב את כפתור ההדלקה של שלט הפילוס CCW והעבר את בורר המצבים למצב 0°" }, // 16
+
+      { type:"separator" },
+
+      { type:"step", text:"לחץ על כפתור הרמה עד שהקרון עולה עד לגובה המאפשר הכנסת המשאית" }, // 17
+
+      { type:"separator" },
+
+      { type:"captain", text:"תדרך את שני המכוונים, הדגש את נושא התקשורת עם הנהג. המהירות לא תעלה על 3 קמ\"ש" },
+
+      { type:"step", text:"כוון את המשאית לכניסה" }, // 18
+
+      { type:"separator" },
+
+      { type:"step", text:"לחץ על כפתור הורדה עד שהקרון יורד על פלטפורמת המשאית" }, // 19
+
+      { type:"separator" },
+
+      { type:"step", text:"נעל את הקרון אל המשאית" }, // 20
+
+      { type:"captain", text:"ודא נעילה תקינה בכל ארבע הפינות" },
+
+      { type:"separator" },
+
+      { type:"step", text:"לחץ על כפתור כיבוי שלט הפילוס, נתק אותו והחזר לאחסון" }, // 21
+      { type:"step", text:"כבה את תיבת בקרת הפילוס" }, // 22
+
+      { type:"separator" },
+
+      { type:"step", text:"במערכת הכוח, לחץ על כפתור 1SC11 לניתוק מתח מהקרון" }, // 23
+
+      { type:"separator" },
+
+      { type:"step", text:"נתק את כבל המתח מהקרון וממערכת הכוח" }, // 24
+
+      { type:"separator" },
+
+      { type:"step", text:"הכנס את כבל המתח אל התוף" }, // 25
+      { type:"step", text:"נתק את כבל ההארקה, שלוף את המוט והחזר לאחסון במערכת הכוח" }, // 26
+
+      { type:"separator" },
+
+      { type:"step", text:"לחץ על כפתור הפעלת מתח ממצברים" }, // 27
+
+      { type:"separator" },
+
+      { type:"step", text:"על תיבת בקרת התוף לחץ על REVERSE וגלול את כבל המתח על התוף" }, // 28
+
+      { type:"separator" },
+
+      { type:"step", text:"אבטח את הכבל עם אזיקון והדק את ברזנט כיסוי התוף" }, // 29
+
+      { type:"separator" },
+
+      { type:"step", text:"במסד הכוח הורד את מפסקי BATTERY SET 1 + 2" }, // 30
+
+      { type:"separator" },
+
+      { type:"step", text:"בלוח החשמל הראשי הורד את מפסק CB32" }, // 31
+      { type:"step", text:"נעל את מחיצת הזכוכית" }, // 32
+      { type:"step", text:"צא מהקרון וסגור היטב את הדלת" }, // 33
+
+      { type:"captain", text:"ודא שהדלת נעולה היטב" }
+    ]
+  },
+
+  // RPS = מערכת כוח
+  'rps-deploy': {
+    he: 'פריסת מערכת כוח',
+    defaultAssignSteps: rpsDeployDefaultAssignSteps,
+    steps: [
+
+      { type:"captain", text:"בצע תדריך בטיחות" },
+      { type:"captain", text:"הגדר מיקום פריסה בהתחשב במיקום אנטנה" },
+
+      { type:"step", text:"כוון את המשאית אל מיקום הפריסה" }, // 1
+
+      { type:"separator" },
+
+      { type:"step", text:"שחרר את נעילת הפלטפורמה מהמשאית" }, // 2
+      { type:"step", text:"שלוף משטחי פיזור לחץ ופלטות קרקע מתחת לפלטפורמה ומקם תחת כל רגל" }, // 3
+      { type:"step", text:"שחרר ידיות המייצבים, משוך החוצה וודא נעילה" }, // 4
+
+      { type:"separator" },
+
+      { type:"step", text:"הוצא את פיני הנעילה, הוצא את המפרק הפנימי מכל רגל ונעל באמצעות פיני הנעילה" }, // 5
+      { type:"step", text:"שחרר את ידיות פריסת הרגליים והצב במצב סיבוב" }, // 6
+
+      { type:"separator" },
+
+      { type:"captain", text:"תדרך את הצוות לגבי הרמה מתואמת, הגדר מספר סיבובים שיבוצעו בכל פעם" },
+      { type:"captain", text:"הנחה את הצוות לבדוק מה כיוון הרמה" },
+
+      { type:"step", text:"הורד את הרגליים לקרקע והרם את הפלטפורמה לגובה שיאפשר הוצאת המשאית" }, // 7
+
+      { type:"separator" },
+
+      { type:"captain", text:"תדרך את מכווני המשאית, הקפד על מהירות של עד 3 קמ\"ש" },
+
+      { type:"step", text:"כוון את המשאית ליציאה" }, // 8
+
+      { type:"separator" },
+
+      { type:"captain", text:"תדרך את הצוות לגבי הורדה מתואמת, הגדר מספר סיבובים שיבוצעו בכל פעם" },
+      { type:"captain", text:"הנחה את הצוות לבדוק מה כיוון ההורדה" },
+
+      { type:"step", text:"הורד את הפלטפורמה לגובה עבודה וודא פילוס" }, // 9
+      { type:"step", text:"הסר את כבל הארקה משותפת, חבר למערכת כוח ופרוס לאנטנה" }, // 10
+      { type:"step", text:"פתח את מכסה עומס הדמה" }, // 11
+      { type:"step", text:"שחרר ופרוס את הסולם" }, // 12
+
+      { type:"separator" },
+
+      { type:"step", text:"בדוק את מד הדלק" }, // 13
+      { type:"step", text:"הוצא מוט וכבל הארקה, וחבר למערכת הכוח" }, // 14
+
+      { type:"separator" },
+
+      { type:"step", text:"סובב ידית מצבר גנרטור למצב BATTERY CONNECT" }, // 15
+
+      { type:"separator" },
+
+      { type:"step", text:"לחץ על כפתור אצבע וודא הופעת כתובית Manual Mode על המסך" }, // 16
+
+      { type:"separator" },
+
+      { type:"step", text:"לחץ על הכפתור הירוק להפעלת הגנרטור" }, // 17
+
+      { type:"separator" },
+
+      { type:"step", text:"פתח דלת ארון AC והרם את מפסק מטען מצברים" }, // 18
+
+      { type:"separator" },
+
+      { type:"step", text:"פתח דלת ארון DC ולחץ על כפתור SDC" }, // 19
+
+      { type:"separator" },
+
+      { type:"step", text:"העבר מפסק SGR למצב NON GROUND" }, // 20
+
+      { type:"separator" },
+
+      { type:"step", text:"לחץ על כפתור SF1C לחיבור מתח הגנרטור למערכת" }, // 21
+
+      { type:"separator" },
+
+      { type:"step", text:"העבר מפסקי מזגנים למצב COOL" }, // 22
+
+      { type:"separator" },
+
+      { type:"step", text:"בדוק את מד הדלק על מסך התצוגה, ודא שיש לפחות 30% מיכל" }, // 23
+      { type:"step", text:"הסר ברזנט מעל תוף כבלי DC, הפעל את פאנל הבקרה, חתוך אזיקוני אבטוח ופרוס אותם אל האנטנה" }, // 24
+      { type:"step", text:"הסר ברזנט מעל תוף כבלי AC, הפעל את פאנל הבקרה, חתוך אזיקון אבטוח, ופרוס אותו אל האנטנה" }, // 25
+
+      { type:"separator" },
+
+      { type:"step", text:"ודא על דלת ארון DC שמפסקי AC + DC במצב OFF" }, // 26
+
+      { type:"separator" },
+
+      { type:"step", text:"חבר כבל DC+ (ירוק) אל J3P" }, // 27
+
+      { type:"separator" },
+
+      { type:"step", text:"חבר כבל DC- (אפור) אל J4P" }, // 28
+      { type:"step", text:"חבר כבל AC- (שחור) אל J1P" } // 29
+    ]
+  },
+
+  'rps-tear': {
+    he: 'קיפול מערכת כוח',
+    defaultAssignSteps: rpsTearDefaultAssignSteps,
+    steps: [
+
+      { type:"captain", text:"בצע תדריך בטיחות" },
+      { type:"captain", text:"ודא שאנטנה, קרון ומערכת קירור אינם זקוקים למערכת כוח" },
+
+      { type:"step", text:"ודא שמפסקי AC ו-DC במצב OFF" },
+
+      { type:"separator" },
+
+      { type:"step", text:"נתק את כבל AC (שחור)" },
+      { type:"step", text:"נתק את כבל DC- (אפור)" },
+
+      { type:"separator" },
+
+      { type:"step", text:"נתק את כבל DC+ (ירוק)" },
+
+      { type:"separator" },
+
+      { type:"step", text:"גלול את כבלי DC, אבטח כל כבל עם אזיקון" },
+      { type:"step", text:"גלול את כבל AC, אבטח אותו עם אזיקון" },
+
+      { type:"separator" },
+
+      { type:"step", text:"לחץ על כפתור SF10 לניתוק מתח הגנרטור מהמערכת" },
+
+      { type:"separator" },
+
+      { type:"step", text:"פתח דלת ארון AC והורד את מפסק מטען מצברים" },
+
+      { type:"separator" },
+
+      { type:"step", text:"סובב ידית מצבר גנרטור למצב BATTERY DISCONNECT" },
+
+      { type:"separator" },
+
+      { type:"step", text:"לחץ על כפתור כיבוי (אדום) לכיבוי הגנרטור" },
+
+      { type:"separator" },
+
+      { type:"step", text:"נתק את כבל הארקה משותפת ממערכת כוח ומהאנטנה וגלול אותו על התוף" },
+
+      { type:"captain", text:"הזהר את הצוות שמכסה עומס דמה עלול להיות חם" },
+
+      { type:"step", text:"קפל ונעל את מכסה עומס דמה" },
+      { type:"step", text:"נתק את כבל ההארקה, שלוף את המוט מהקרקע והחזר לאחסון" },
+
+      { type:"separator" },
+
+      { type:"step", text:"קפל ונעל את הסולם" },
+
+      { type:"separator" },
+
+      { type:"captain", text:"תדרך את הצוות לגבי הרמה מתואמת, הגדר מספר סיבובים שיבוצעו בכל פעם" },
+      { type:"captain", text:"הנחה את הצוות לבדוק מה כיוון ההורדה" },
+
+      { type:"step", text:"הרם את הפלטפורמה לגובה שיאפשר הכנסת המשאית" },
+
+      { type:"separator" },
+
+      { type:"captain", text:"תדרך את מכווני המשאית, הקפד על מהירות של עד 3 קמ\"ש" },
+
+      { type:"step", text:"כוון את המשאית לכניסה מתחת לפלטפורמה" },
+
+      { type:"separator" },
+
+      { type:"step", text:"הורד את פלטפורמה אל המשאית" },
+
+      { type:"separator" },
+
+      { type:"step", text:"נעל את הפלטפורמה אל המשאית" },
+      { type:"step", text:"הרם את הרגליים עד הסוף" },
+
+      { type:"separator" },
+
+      { type:"step", text:"הוצא את פיני הנעילה, הכנס את המפרק הפנימי לכל רגל ונעל באמצעות פיני הנעילה" },
+      { type:"step", text:"אסוף את פלטות הקרקע ונעל מתחת לפלטפורמה" },
+      { type:"step", text:"אסוף את משטחי פיזור הלחץ ונעל מתחת לפלטפורמה" },
+
+      { type:"separator" },
+
+      { type:"step", text:"נעל את ידיות פריסת הרגליים" },
+
+      { type:"separator" },
+
+      { type:"step", text:"שחרר ידיות המייצבים, דחוף פנימה וודא נעילה" }
+    ]
+  },
+
+  'cooling-deploy': {
+    he: 'פריסת מערכת קירור',
+    defaultAssignSteps: coolingDeployDefaultAssignSteps,
+    steps: [
+
+      { type:"captain", text:"בצע תדריך בטיחות" },
+      { type:"captain", text:"הגדר מיקום פריסה בהתחשב במיקום אנטנה" },
+
+      { type:"step", text:"כוון את המשאית אל מיקום הפריסה" }, // 1
+
+      { type:"separator" },
+
+      { type:"step", text:"שחרר את נעילת הפלטפורמה מהמשאית" }, // 2
+
+      { type:"captain", text:"ודא שכל נועלי הפלטפורמה פתוחים" },
+
+      { type:"step", text:"הוצא משטחי פיזור לחץ ומקם תחת כל רגל" }, // 3
+      { type:"step", text:"הסר פלטות קרקע מהפלטפורמה וחבר לכל רגל" }, // 4
+      { type:"step", text:"שחרר את ידיות פריסת הרגליים והצב במצב סיבוב" }, // 5
+      { type:"step", text:"הוצא את פיני הנעילה, הוצא את המפרק הפנימי מכל רגל ונעל באמצעות פיני הנעילה" }, // 6
+      { type:"step", text:"הורד את הסולם מהפלטפורמה, פרוס והתקן אותו" }, // 7
+
+      { type:"captain", text:"תדרך את הצוות לגבי הורדה מתואמת, הגדר מספר סיבובים שיבוצעו בכל פעם" },
+
+      { type:"step", text:"הורד את הרגליים לקרקע והרם את הפלטפורמה לגובה שיאפשר הוצאת המשאית" }, // 8
+
+      { type:"separator" },
+
+      { type:"captain", text:"תדרך את מכווני המשאית, הקפד על מהירות של עד 3 קמ\"ש" },
+
+      { type:"step", text:"כוון את המשאית ליציאה" }, // 9
+
+      { type:"separator" },
+
+      { type:"step", text:"הורד את הפלטפורמה לגובה עבודה" }, // 10
+
+      { type:"captain", text:"בדוק על הפלס שהפלטפורמה מפולסת" },
+
+      { type:"separator" },
+
+      { type:"step", text:"שחרר את נעילת תוף כבל הבקרה, וחתוך את אזיקון האבטוח" }, // 11
+      { type:"step", text:"התקן את ידית סיבוב תוף כבל המתח, שחרר את הנעילה וחתוך את אזיקון האבטוח" }, // 12
+      { type:"step", text:"שחרר את רצועות האבטוח של שני צינורות הקירור מהתופים על גבי הפלטפורמה" }, // 13
+      { type:"step", text:"חבר הארקה למערכת הקירור" }, // 14
+
+      { type:"separator" },
+
+      { type:"step", text:"סובב את תוף כבל הבקרה עד להסרת הכבל מהתוף" }, // 15
+      { type:"step", text:"סובב את תוף כבל המתח עד להסרת הכבל מהתוף" }, // 16
+
+      { type:"separator" },
+
+      { type:"step", text:"RPS: העבר מתג DC למצב OFF ואח\"כ העבר מתג AC למצב OFF" }, // 17
+
+      { type:"separator" },
+
+      { type:"step", text:"חבר את כבל הבקרה אל J2 על מערכת הקירור ואל המחבר ליד קופסת הבקרה על פדסטאל האנטנה" }, // 18
+      { type:"step", text:"חבר את כבל המתח אל J1 על מערכת הקירור ואל המחבר על PDB1" }, // 19
+      { type:"step", text:"חבר את צינורות הקירור אל המחברים על הפדסטאל" }, // 20
+
+      { type:"separator" },
+
+      { type:"step", text:"אבטח את מהדקי הצינורות בעזרת אזיקונים" }, // 21
+
+      { type:"separator" },
+
+      { type:"step", text:"RPS: העבר מתג AC למצב ON ואח\"כ העבר מתג DC למצב ON" }, // 22
+
+      { type:"separator" },
+
+      { type:"captain", text:"ודא שצינורות נוזל הקירור מחוברים ומאובטחים היטב" },
+
+      { type:"step", text:"פתח את שסתומי זרימת הנוזל על LRCU ועל הפדסטאל" }, // 23
+
+      { type:"separator" },
+
+      { type:"step", text:"העבר את המפסק הראשי למצב ON (מאונך)" }, // 24
+
+      { type:"separator" },
+
+      { type:"step", text:"בפאנל לוח הבקרה, העבר מפסק 24V למצב ON" }, // 25
+
+      { type:"separator" },
+
+      { type:"step", text:"בפאנל לוח הבקרה, העבר מפסק LOCAL/REMOTE למצב LOCAL" }, // 26
+      { type:"step", text:"בפאנל לוח הבקרה, לחץ על כפתור START" }, // 27
+
+      { type:"separator" },
+
+      { type:"captain", text:"תן למערכת לפעול 15 דקות, אח\"כ ודא על מסך התצוגה שהלחץ הוא 25 PSI. אם חסר לחץ, הנחה את הצוות להוסיף נוזל קירור מהמיכל הרזרבי" },
+      { type:"captain", text:"ודא שהאנטנה הוזקפה" },
+
+      { type:"step", text:"בפאנל לוח הבקרה, העבר מפסק LOCAL/REMOTE למצב REMOTE" } // 28
+    ]
+  },
+
+  'cooling-tear': {
+    he: 'קיפול מערכת קירור',
+    defaultAssignSteps: coolingTearDefaultAssignSteps,
+    steps: [
+
+      { type:"captain", text:"בצע תדריך בטיחות וודא שהאנטנה מקופלת" },
+
+      { type:"step", text:"בפאנל לוח הבקרה, העבר מפסק LOCAL/REMOTE למצב LOCAL" }, // 1
+
+      { type:"separator" },
+
+      { type:"step", text:"בפאנל לוח הבקרה, לחץ על כפתור STOP" }, // 2
+
+      { type:"separator" },
+
+      { type:"step", text:"בפאנל לוח הבקרה, העבר מפסק 24V למצב OFF" }, // 3
+
+      { type:"separator" },
+
+      { type:"step", text:"העבר את המפסק הראשי למצב OFF (מאוזן)" }, // 4
+
+      { type:"separator" },
+
+      { type:"step", text:"סגור את שסתומי זרימת הנוזל" }, // 5
+
+      { type:"separator" },
+
+      { type:"step", text:"RPS: העבר מתג DC למצב OFF ואח\"כ העבר מתג AC למצב OFF" }, // 6
+
+      { type:"separator" },
+
+      { type:"step", text:"חתוך את אזיקוני האבטוח ונתק את שני הצינורות" }, // 7
+
+      { type:"separator" },
+
+      { type:"step", text:"נתק את כבל המתח ממערכת הקירור ומ‑PDB1" }, // 8
+      { type:"step", text:"נתק את כבל הבקרה ממערכת הקירור ומהאנטנה" }, // 9
+      { type:"step", text:"נתק את כבל ההארקה והחזר אל מקום האחסון ב‑RPS" }, // 10
+      { type:"step", text:"קפל את הסולם ונעל אותו אל הפלטפורמה" }, // 11
+
+      { type:"separator" },
+
+      { type:"step", text:"גלול את כבל הבקרה על התוף ואבטח באזיקון, נעל את התוף" }, // 12
+      { type:"step", text:"התקן ידית סיבוב על תוף כבל המתח, גלול את הכבל על התוף ואבטח באזיקון. נעל את התוף" }, // 13
+      { type:"step", text:"גלגל את הצינורות על התופים והדק באמצעות רצועות ההידוק" }, // 14
+
+      { type:"separator" },
+
+      { type:"captain", text:"תדרך את הצוות לגבי הרמה מתואמת, הגדר מספר סיבובים שיבוצעו בכל פעם" },
+
+      { type:"step", text:"הרם את הרגליים לגובה המאפשר הכנסת משאית תחת הפלטפורמה" }, // 15
+
+      { type:"separator" },
+
+      { type:"captain", text:"תדרך את מכווני המשאית, הקפד על מהירות של עד 3 קמ\"ש" },
+
+      { type:"step", text:"כוון את המשאית לכניסה תחת הפלטפורמה" }, // 16
+
+      { type:"separator" },
+
+      { type:"step", text:"הורד את הרגליים עד להנחת הפלטפורמה על המשאית" }, // 17
+
+      { type:"separator" },
+
+      { type:"step", text:"נעל את הפלטפורמה אל המשאית" }, // 18
+
+      { type:"separator" },
+
+      { type:"step", text:"הסר פלטות קרקע מכל רגל ונעל והדק בברגים אל הפלטפורמה" }, // 19
+      { type:"step", text:"אסוף את משטחי פיזור הלחץ ונעל בכלוב המתאים על הפלטפורמה" } // 20
+    ]
+  }
+
+};
+
+/* PERSISTENCE */
+function saveState() {
+  localStorage.setItem('ops_checked', JSON.stringify(checked));
+  localStorage.setItem('ops_crew', JSON.stringify(crew));
+  localStorage.setItem('ops_captain', captainMode ? '1' : '0');
+}
+
+function loadState() {
+  const sChecked = localStorage.getItem('ops_checked');
+  const sCrew = localStorage.getItem('ops_crew');
+  const sCaptain = localStorage.getItem('ops_captain');
+
+  if (sChecked) checked = JSON.parse(sChecked);
+  if (sCrew) crew = JSON.parse(sCrew);
+  if (sCaptain === '1') captainMode = true;
+
+  initCrewInputs();
+  initCaptainButton();
+}
+
+/* NAVIGATION */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function applyHeaderColor() {
+  const hdr = document.getElementById('checklist-header');
+  if (currentColor && headerGradients[currentColor]) {
+    hdr.style.background = headerGradients[currentColor];
+  } else {
+    hdr.style.background = '#0d1f3c';
+  }
+}
+
+function openChecklist(key, color) {
+  currentChecklist = key;
+  currentColor = color;
+  const steps = checklists[key].steps;
+
+  if (!checked[key] || checked[key].length !== steps.length) {
+    checked[key] = new Array(steps.length).fill(false);
+  }
+  if (!assigned[key] || assigned[key].length !== steps.length) {
+    assigned[key] = new Array(steps.length).fill('');
+  }
+
+  showScreen('screen-checklist');
+  document.getElementById('cl-title').textContent = checklists[key].he;
+
+  const totalSteps = steps.filter(s=>s.type === 'step').length;
+  document.getElementById('cl-sub').textContent = `${totalSteps} צעדים`;
+
+  applyHeaderColor();
+  initCrewInputs();
+  initCaptainButton();
+  renderSteps();
+  saveState();
+}
+
+function goHome() {
+  currentChecklist = null;
+  currentColor = null;
+  showScreen('screen-home');
+  saveState();
+}
+
+/* CREW */
+function toggleCrew() {
+  const body = document.getElementById('crew-body');
+  const ind = document.getElementById('crew-toggle-indicator');
+  body.classList.toggle('show');
+  ind.textContent = body.classList.contains('show') ? '▲' : '▼';
+}
+
+function initCrewInputs() {
+  document.querySelectorAll('[data-crew]').forEach(inp=>{
+    const letter = inp.dataset.crew;
+    inp.value = crew[letter] || '';
+    inp.oninput = ()=>{
+      crew[letter] = inp.value;
+      saveState();
+      updateAssignmentsHighlight();
+    };
+  });
+}
+
+/* CAPTAIN BUTTON */
+function initCaptainButton() {
+  const btn = document.getElementById('captain-btn');
+  if (!btn) return;
+
+  updateCaptainButtonVisual();
+
+  let pressTimer = null;
+
+  const startPress = () => {
+    if (pressTimer) clearTimeout(pressTimer);
+    pressTimer = setTimeout(()=>{
+      captainMode = !captainMode;
+      updateCaptainButtonVisual();
+      saveState();
+      if (currentChecklist) renderSteps();
+    }, 1500);
+  };
+
+  const cancelPress = () => {
+    if (pressTimer) {
+      clearTimeout(pressTimer);
+      pressTimer = null;
+    }
+  };
+
+  btn.onmousedown = startPress;
+  btn.onmouseup = cancelPress;
+  btn.onmouseleave = cancelPress;
+  btn.ontouchstart = (e)=>{ e.preventDefault(); startPress(); };
+  btn.ontouchend = cancelPress;
+}
+
+function updateCaptainButtonVisual() {
+  const btn = document.getElementById('captain-btn');
+  if (!btn) return;
+  if (captainMode) {
+    btn.classList.add('captain-active');
+  } else {
+    btn.classList.remove('captain-active');
+  }
+}
+
+/* CLEAR ASSIGNMENTS (ציוות) */
+function clearCrew() {
+  if (!currentChecklist) return;
+  if (!confirm('למחוק את הציוות הנוכחי?')) return;
+
+  const steps = checklists[currentChecklist].steps;
+  assigned[currentChecklist] = new Array(steps.length).fill('');
+  saveState();
+  renderSteps();
+}
+
+/* AUTO ASSIGN CREW */
+function autoAssignCrew() {
+  if (!currentChecklist) return;
+  const cfg = checklists[currentChecklist];
+  const steps = cfg.steps;
+  const def = cfg.defaultAssignSteps;
+
+  if (!def || !def.length) {
+    alert('אין ציוות מוגדר לצ\'קליסט זה בקוד.');
+    return;
+  }
+
+  if (!assigned[currentChecklist] || assigned[currentChecklist].length !== steps.length) {
+    assigned[currentChecklist] = new Array(steps.length).fill('');
+  }
+
+  let stepIdx = 0;
+  steps.forEach((s, i)=>{
+    if (s.type === 'step' && stepIdx < def.length) {
+      assigned[currentChecklist][i] = def[stepIdx] || '';
+      stepIdx++;
+    }
+  });
+
+  saveState();
+  renderSteps();
+}
+
+/* RENDER STEPS */
+function renderSteps() {
+  const list = document.getElementById('steps-list');
+  list.innerHTML = '';
+  const steps = checklists[currentChecklist].steps;
+  const state = checked[currentChecklist];
+  const assigns = assigned[currentChecklist] || [];
+
+  let visibleStepNumber = 1;
+
+  steps.forEach((step, i)=>{
+    if (step.type === 'captain') {
+      if (!captainMode) return;
+      const div = document.createElement('div');
+      div.className = 'captain-banner';
+      div.innerHTML = step.text;
+      list.appendChild(div);
+      return;
+    }
+
+    if (step.type === 'separator') {
+      const sep = document.createElement('div');
+      sep.className = 'separator-line';
+      list.appendChild(sep);
+      return;
+    }
+
+    if (step.type === 'step') {
+      const div = document.createElement('div');
+      const isChecked = !!state[i];
+      const assignVal = (assigns[i] || '').toUpperCase();
+
+      div.className = 'step-item' + (isChecked ? ' checked' : '');
+      div.dataset.index = i;
+
+      div.innerHTML = `
+        <div class="step-checkbox">${isChecked ? '✓' : ''}</div>
+        <div class="step-number">${visibleStepNumber}</div>
+        <div class="step-text">${step.text}</div>
+        <div class="assign-wrap" onclick="event.stopPropagation()">
+          <input class="assign-input" maxlength="4" data-assign-index="${i}" value="${assignVal}">
+        </div>
+      `;
+
+      div.addEventListener('click', ()=>toggleStep(i));
+      list.appendChild(div);
+
+      visibleStepNumber++;
+    }
+  });
+
+  list.querySelectorAll('.assign-input').forEach(inp=>{
+    inp.oninput = ()=>{
+      const idx = parseInt(inp.dataset.assignIndex,10);
+      let val = (inp.value || '').toUpperCase().replace(/[^A-F]/g,'');
+      if (val.length>4) val = val.slice(0,4);
+      inp.value = val;
+      if (!assigned[currentChecklist]) {
+        assigned[currentChecklist] = new Array(steps.length).fill('');
+      }
+      assigned[currentChecklist][idx] = val;
+      saveState();
+      updateAssignmentsHighlight();
+    };
+  });
+
+  updateProgress();
+  updateAssignmentsHighlight();
+}
+
+/* TOGGLE STEP */
+function toggleStep(i) {
+  checked[currentChecklist][i] = !checked[currentChecklist][i];
+  renderSteps();
+  saveState();
+
+  if (checked[currentChecklist][i]) {
+    const list = document.getElementById('steps-list');
+    const item = list.querySelector(`.step-item[data-index="${i}"]`);
+    if (item) {
+      const rect = item.getBoundingClientRect();
+      window.scrollBy({ top: rect.bottom - 80, behavior: 'smooth' });
+    }
+  }
+}
+
+/* PROGRESS */
+function updateProgress() {
+  const steps = checklists[currentChecklist].steps;
+  const state = checked[currentChecklist];
+
+  let done = 0;
+  let total = 0;
+
+  steps.forEach((step, idx)=>{
+    if (step.type === 'step') {
+      total++;
+      if (state && state[idx]) done++;
+    }
+  });
+
+  const pct = total ? Math.round((done/total)*100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${done} / ${total}`;
+  const badge = document.getElementById('complete-badge');
+  if (done===total && total>0) badge.classList.add('show');
+  else badge.classList.remove('show');
+}
+
+/* ASSIGNMENT HIGHLIGHT */
+function updateAssignmentsHighlight() {
+  if (!currentChecklist) return;
+  const activeLetters = Object.entries(crew)
+    .filter(([,name])=>name && name.trim().length>0)
+    .map(([letter])=>letter);
+
+  const list = document.getElementById('steps-list');
+  const assigns = assigned[currentChecklist] || [];
+
+  list.querySelectorAll('.step-item').forEach(item=>{
+    const idx = parseInt(item.dataset.index,10);
+    const val = (assigns[idx]||'').toUpperCase();
+    const hasMatch = activeLetters.some(letter=>val.includes(letter));
+    item.classList.toggle('assigned-highlight', hasMatch);
+  });
+}
+
+/* RESET */
+function resetAll() {
+  if (!confirm('לאפס את כל הנתונים?')) return;
+  currentChecklist = null;
+  currentColor = null;
+  checked = {};
+  assigned = {};
+  crew = {A:'',B:'',C:'',D:'',E:'',F:'',G:'',H:''};
+  captainMode = false;
+  saveState();
+  document.querySelectorAll('[data-crew]').forEach(inp=>inp.value='');
+  showScreen('screen-home');
+}
+
+/* INIT */
+loadState();
+</script>
+
 </body>
 </html>
+```
