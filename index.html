@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- PWA REQUIRED TAGS -->
+  <meta name="theme-color" content="#0a1628">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png">
+
+  <title>רשימות תיוג לפריסה וקיפול</title>
+
+  <!-- MAIN CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- APP ROOT -->
+  <div id="app">
+    <h1 style="text-align:center; margin-top:40px;">טוען אפליקציה...</h1>
+  </div>
+
+  <!-- MAIN JS -->
+  <script src="app.js"></script>
+
+  <!-- REGISTER SERVICE WORKER -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(() => console.log('Service Worker registered'))
+          .catch(err => console.log('SW registration failed:', err));
+      });
+    }
+  </script>
+
+</body>
+</html>
+
+
