@@ -4,30 +4,76 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- צבע מערכת / PWA -->
   <meta name="theme-color" content="#0a1628">
-
-  <!-- מניפסט -->
   <link rel="manifest" href="manifest.json">
-
-  <!-- אייקון לדפדפנים / אנדרואיד -->
   <link rel="icon" href="icons/icon-192.png">
-
-  <!-- אייקון לאייפון -->
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 
   <title>רשימות תיוג לפריסה וקיפול</title>
 
-  <!-- CSS אם יש (לא חובה) -->
-  <!-- <link rel="stylesheet" href="styles.css"> -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  <div id="app">
-    <h1 style="text-align:center; margin-top:40px;">טוען אפליקציה...</h1>
+
+  <!-- מסך הבית -->
+  <div id="screen-home" class="screen active">
+    <h1 class="home-title">רשימות תיוג</h1>
+
+    <div class="home-list">
+      <button class="home-btn" onclick="openChecklist('antenna-deploy','blue')">פריסת אנטנה</button>
+      <button class="home-btn" onclick="openChecklist('antenna-tear','orange')">קיפול אנטנה</button>
+      <button class="home-btn" onclick="openChecklist('rcs-deploy','green')">פריסת קרון</button>
+      <button class="home-btn" onclick="openChecklist('rcs-tear','brown')">קיפול קרון</button>
+      <button class="home-btn" onclick="openChecklist('rps-deploy','purple')">פריסת מערכת כוח</button>
+      <button class="home-btn" onclick="openChecklist('rps-tear','red')">קיפול מערכת כוח</button>
+      <button class="home-btn" onclick="openChecklist('cooling-deploy','cool1')">פריסת מערכת קירור</button>
+      <button class="home-btn" onclick="openChecklist('cooling-tear','cool2')">קיפול מערכת קירור</button>
+    </div>
+
+    <button id="captain-btn" class="captain-btn">מצב קפטן</button>
+    <button class="reset-btn" onclick="resetAll()">איפוס מלא</button>
   </div>
 
-  <!-- קובץ JS הראשי שלך -->
+  <!-- מסך צ'ק ליסט -->
+  <div id="screen-checklist" class="screen">
+    <div id="checklist-header">
+      <button class="back-btn" onclick="goHome()">← חזרה</button>
+      <h2 id="cl-title"></h2>
+      <div id="cl-sub"></div>
+    </div>
+
+    <div id="progress-bar">
+      <div id="progress-fill"></div>
+      <span id="progress-text"></span>
+    </div>
+
+    <div id="complete-badge">✔ הושלם</div>
+
+    <div id="crew-panel">
+      <div id="crew-toggle" onclick="toggleCrew()">
+        צוות <span id="crew-toggle-indicator">▼</span>
+      </div>
+      <div id="crew-body">
+        <div class="crew-row"><span>A</span><input data-crew="A"></div>
+        <div class="crew-row"><span>B</span><input data-crew="B"></div>
+        <div class="crew-row"><span>C</span><input data-crew="C"></div>
+        <div class="crew-row"><span>D</span><input data-crew="D"></div>
+        <div class="crew-row"><span>E</span><input data-crew="E"></div>
+        <div class="crew-row"><span>F</span><input data-crew="F"></div>
+        <div class="crew-row"><span>G</span><input data-crew="G"></div>
+        <div class="crew-row"><span>H</span><input data-crew="H"></div>
+      </div>
+    </div>
+
+    <div id="steps-list"></div>
+
+    <div id="assign-actions">
+      <button onclick="autoAssignCrew()">שיוך אוטומטי</button>
+      <button onclick="clearCrew()">ניקוי שיוכים</button>
+    </div>
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>
