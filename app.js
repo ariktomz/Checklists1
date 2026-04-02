@@ -38,14 +38,15 @@ const rpsTearDefaultAssignSteps = [];
    CHECKLISTS DATA
 ============================ */
 const checklists = {
-  "antenna-deploy": { he:"פריסת אנטנה", defaultAssignSteps: antennaDefaultAssignSteps, steps:[ ... ] },
-  "antenna-tear":   { he:"קיפול אנטנה", defaultAssignSteps: antennaTeardownDefaultAssignSteps, steps:[ ... ] },
-  "rcs-deploy":     { he:"פריסת קרון", defaultAssignSteps: rcsDeployDefaultAssignSteps, steps:[ ... ] },
-  "rcs-tear":       { he:"קיפול קרון", defaultAssignSteps: rcsTearDefaultAssignSteps, steps:[ ... ] },
-  "rps-deploy":     { he:"פריסת מערכת כוח", defaultAssignSteps: rpsDeployDefaultAssignSteps, steps:[ ... ] },
-  "rps-tear":       { he:"קיפול מערכת כוח", defaultAssignSteps: rpsTearDefaultAssignSteps, steps:[ ... ] },
-  "cooling-deploy": { he:"פריסת מערכת קירור", defaultAssignSteps: coolingDeployDefaultAssignSteps, steps:[ ... ] },
-  "cooling-tear":   { he:"קיפול מערכת קירור", defaultAssignSteps: coolingTearDefaultAssignSteps, steps:[ ... ] }
+const checklists = {
+  "antenna-deploy": { he:"פריסת אנטנה", defaultAssignSteps: antennaDefaultAssignSteps, steps: [] },
+  "antenna-tear":   { he:"קיפול אנטנה", defaultAssignSteps: antennaTeardownDefaultAssignSteps, steps: [] },
+  "rcs-deploy":     { he:"פריסת קרון", defaultAssignSteps: rcsDeployDefaultAssignSteps, steps: [] },
+  "rcs-tear":       { he:"קיפול קרון", defaultAssignSteps: rcsTearDefaultAssignSteps, steps: [] },
+  "rps-deploy":     { he:"פריסת מערכת כוח", defaultAssignSteps: rpsDeployDefaultAssignSteps, steps: [] },
+  "rps-tear":       { he:"קיפול מערכת כוח", defaultAssignSteps: rpsTearDefaultAssignSteps, steps: [] },
+  "cooling-deploy": { he:"פריסת מערכת קירור", defaultAssignSteps: coolingDeployDefaultAssignSteps, steps: [] },
+  "cooling-tear":   { he:"קיפול מערכת קירור", defaultAssignSteps: coolingTearDefaultAssignSteps, steps: [] }
 };
 
 /* ============================
