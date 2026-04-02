@@ -349,6 +349,7 @@ function resetAll() {
   saveState();
   showScreen('screen-home');
 }
+console.log("app.js עובד");
 
 /* ============================
    INIT
